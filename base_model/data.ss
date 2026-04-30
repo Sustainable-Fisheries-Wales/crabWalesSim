@@ -1,0 +1,731 @@
+#V3.30.17.01;_2021_06_15;_safe;_Stock_Synthesis_by_Richard_Methot_(NOAA)_using_ADMB_12.3
+#Stock Synthesis (SS) is a work of the U.S. Government and is not subject to copyright protection in the United States.
+#Foreign copyrights may apply. See copyright.txt for more information.
+#_user_support_available_at:NMFS.Stock.Synthesis@noaa.gov
+#_user_info_available_at:https://vlab.noaa.gov/group/stock-synthesis
+#_Start_time: Mon Jul 12 15:02:52 2021
+#_Number_of_datafiles: 3
+#C data file for crab (wales)
+#_observed data:
+#V3.30.17.01;_2021_06_15;_safe;_Stock_Synthesis_by_Richard_Methot_(NOAA)_using_ADMB_12.3
+#Stock Synthesis (SS) is a work of the U.S. Government and is not subject to copyright protection in the United States.
+#Foreign copyrights may apply. See copyright.txt for more information.
+1962 #_StartYr
+2024 #_EndYr
+1 #_Nseas
+12 #_months/season
+2 #_Nsubseasons (even number, minimum is 2)
+1.0 #_spawn_month
+2 #_Ngenders: 1, 2, -1  (use -1 for 1 sex setup with SSB multiplied by female_frac parameter)
+15 #_Nages=accumulator age, first age is always age 0 
+1 #_Nareas
+8 #_Nfleets (including surveys)
+#_fleet_type: 1=catch fleet; 2=bycatch only fleet; 3=survey; 4=ignore 
+#_sample_timing: -1 for fishing fleet to use season-long catch-at-age for observations, or 1 to use observation month;  (always 1 for surveys)
+#_fleet_area:  area the fleet/survey operates in 
+#_units of catch:  1=bio; 2=num (ignored for surveys; their units read later)
+#_catch_mult: 0=no; 1=yes
+#_rows are fleets
+#_fleet_type fishery_timing area catch_units need_catch_mult fleetname
+    3               1        1      1            0       Observer_inshore_u10  # 1 
+    1              -1        1      1            1       Pot_fisheries_historical # 2
+    1              -1        1      1            0       Pot_fisheries_u10 # 3
+    1              -1        1      1            0       Pot_fisheries_10to12 # 4
+    1              -1        1      1            0       Pot_fisheries_o12 # 5
+    1              -1        1      1            1       Bycatch_fisheries_historical # 6
+    1              -1        1      1            0       Bycatch_fisheries_gillnet # 7
+    1              -1        1      1            0       Bycatch_fisheries_trawl # 8
+
+# Bycatch Fleets
+# This is an optional input and if no bycatch is to be included in to the catches this section can be ignored
+# A fishing fleet is designated as a bycatch fleet by indicating that its fleet type is 2. A bycatch fleet creates a fishing mortality, 
+# same as a fleet of type 1, but a bycatch fleet has all catch discarded so the input value for retained catch is ignored. 
+# However, an input value for retained catch is still needed to indicate that the bycatch fleet was active in that year and season. 
+# A catch multiplier cannot be used with bycatch fleets because catch multiplier works on retained catch. SS3 will expect that the retention 
+# function for this fleet will be set in the selectivity section to type 3, indicating that all selected catch is discarded dead.
+# It is necessary to specify a selectivity pattern for the bycatch fleet and, due to generally lack of data, to externally derive values for 
+# the parameters of this selectivity.
+# All catch from a bycatch fleet is discarded, so one option to use a discard fleet is to enter annual values for the amount (not proportion) 
+# that is discarded in each time step
+
+# Bycatch_fleet_input_goes_next
+#a:  fleet index
+#b:  1=include dead bycatch in total dead catch for F0.1 and MSY optimizations and forecast ABC; 2=omit from total catch for these purposes (but still include the mortality)
+#c:  1=Fmult scales with other fleets; 2=bycatch F constant at input value; 3=bycatch F from range of years
+#d:  F or first year of range
+#e:  last year of range
+#f:  not used
+# a   b   c   d   e   f 
+
+# Predator Fleets
+
+# Catch
+# The format for the catches is year and season that the catch is attributed to, fleet, a catch value, and a year-specific catch standard error. 
+# Only positive catches need to be entered, so there is no need for records corresponding to all years and fleets. 
+# To include an equilibrium catch value for a fleet and season, the year should be noted as -999
+# For each non-zero equilibrium catch value included, a short parameter line is required in the initial F section of the control file.
+# the list is terminated by entering a record with the value of -9999 in the year field. The updated list based approach extends throughout 
+# the data file (e.g., catch, length- and age-composition data), the control file (e.g., lambdas), and the forecast file (e.g., total catch by fleet, total
+# catch by area, allocation groups, forecasted catch).
+# if a season value is greater than the number of seasons for a particular model, that catch is added to the catch for the final season. 
+# The alternative option is to the use of season = 0. This will cause SS3 to distribute the input value of catch equally among the number of 
+# seasons. SS3 assumes that catch occurs continuously over seasons and hence is not specified as month in the catch data section
+# However, all other data types will need to be specified by month.
+# If there are challenges to estimating discards within the model, catches can be input as total dead without the use of discard data and 
+# retention curves.
+# If there is reason to believe that the retained catch values underestimate the true catch, then it is possible in the retention parameter 
+# set up to create the ability for the model to estimate the degree of unrecorded catch. However, this is better
+# handled with the new catch multiplier option.
+#_catch_se:  standard error of log(catch)
+#_NOTE: catch data is ignored for survey fleets
+#yr, seas, fleet, catch, catch_se
+-999 1 2 50 0.5
+#1983	1	2	209	0.1
+#1984	1	2	168	0.1
+#1985	1	2	149	0.1 # added 100
+#1986	1	2	146	0.1 # added 100
+#1987	1	2	144	0.1 # added 100
+#1988	1	2	142	0.1 # added 100
+#1989	1	2	353	0.1
+#1990	1	2	169	0.1 # added 100
+#1991	1	2	265	0.1
+#1992	1	2	157	0.1
+#1993	1	2	662	0.1
+#1994	1	2	825	0.1
+#1995	1	2	729	0.1
+#1996	1	2	431	0.1
+#1997	1	2	281	0.1
+#1998	1	2	132	0.1
+#1999	1	2	542	0.1
+#2000	1	2	746	0.1
+#2001	1	2	849	0.1
+#2002	1	2	900	0.1
+#2003	1	2	951	0.1
+#2004	1	2	901	0.1
+#2005	1	2	737	0.1
+
+1962	1	2	5.049	0.1
+1963	1	2	6.776	0.1
+1964	1	2	7.227	0.1
+1965	1	2	8.635	0.1
+1966	1	2	8.624	0.1
+1967	1	2	8.195	0.1
+1968	1	2	8.745	0.1
+1969	1	2	10.12	0.1
+1970	1	2	7.326	0.1
+1971	1	2	8.712	0.1
+1972	1	2	5.61	0.1
+1973	1	2	7.095	0.1
+1974	1	2	8.371	0.1
+1975	1	2	10.747	0.1
+1976	1	2	36.685	0.1
+1977	1	2	24.838	0.1
+1978	1	2	16.016	0.1
+1979	1	2	204.75	0.1
+1980	1	2	23.892	0.1
+1981	1	2	99.099	0.1
+1982	1	2	47.179	0.1
+1983	1	2	66.715	0.1
+1984	1	2	23.364	0.1
+1985	1	2	44.77	0.1
+1986	1	2	42.471	0.1
+1987	1	2	117.557	0.1
+1988	1	2	151.714	0.1
+1989	1	2	324.809	0.1
+1990	1	2	350.447	0.1
+1991	1	2	289.435	0.1
+1992	1	2	389.973	0.1
+1993	1	2	107.844	0.1
+1994	1	2	78.386	0.1
+1995	1	2	174.829	0.1
+1996	1	2	53.525	0.1
+1997	1	2	422.419	0.1
+1998	1	2	372.245	0.1
+1999	1	2	305.179	0.1
+2000	1	2	302.597	0.1
+2001	1	2	330.973	0.1
+2002	1	2	398.439	0.1
+2003	1	2	328.416	0.1
+2004	1	2	292.465	0.1
+2005	1	2	286.234	0.1
+
+2006	1	3	266.60	0.01
+2007	1	3	276.45	0.01
+2008	1	3	247.15	0.01
+2009	1	3	224.11	0.01
+2010	1	3	239.69	0.01
+2011	1	3	286.00	0.01
+2012	1	3	288.58	0.01
+2013	1	3	199.21	0.01
+2014	1	3	188.70	0.01
+2015	1	3	153.54	0.01
+2016	1	3	186.85	0.01
+2017	1	3	233.16	0.01
+2018	1	3	174.80	0.01
+2019	1	3	160.60	0.01
+2020	1	3	101.18	0.01
+2021	1	3	99.68	0.01
+2022	1	3	102.10	0.01
+2023	1	3	92.68	0.01
+2024	1	3	99.88	0.01
+
+2006	1	4	50.40	0.01
+2007	1	4	47.27	0.01
+2008	1	4	25.11	0.01
+2009	1	4	106.84	0.01
+2010	1	4	161.99	0.01
+2011	1	4	220.00	0.01
+2012	1	4	311.91	0.01
+2013	1	4	152.77	0.01
+2014	1	4	139.83	0.01
+2015	1	4	133.39	0.01
+2016	1	4	115.33	0.01
+2017	1	4	80.62	0.01
+2018	1	4	99.67	0.01
+2019	1	4	188.32	0.01
+2020	1	4	112.73	0.01
+2021	1	4	99.12	0.01
+2022	1	4	94.09	0.01
+2023	1	4	94.23	0.01
+2024	1	4	40.46	0.01
+
+2006	1	5	0.13	0.01
+2007	1	5	2.29	0.01
+2008	1	5	2.71	0.01
+2009	1	5	284.28	0.01
+2010	1	5	385.92	0.01
+2011	1	5	31.90	0.01
+2012	1	5	27.39	0.01
+2013	1	5	16.10	0.01
+2014	1	5	77.95	0.01
+2015	1	5	148.71	0.01
+2016	1	5	94.18	0.01
+2017	1	5	336.98	0.01
+2018	1	5	226.84	0.01
+2019	1	5	59.53	0.01
+2020	1	5	52.48	0.01
+2021	1	5	85.65	0.01
+2022	1	5	94.58	0.01
+2023	1	5	124.23	0.01
+2024	1	5	138.36	0.01
+
+-999 1 6 50 0.5
+1962	1	6	69.39	0.1
+1963	1	6	69.39	0.1
+1964	1	6	69.39	0.1
+1965	1	6	69.39	0.1
+1966	1	6	69.39	0.1
+1967	1	6	69.39	0.1
+1968	1	6	69.39	0.1
+1969	1	6	69.39	0.1
+1970	1	6	69.39	0.1
+1971	1	6	69.39	0.1
+1972	1	6	69.39	0.1
+1973	1	6	69.39	0.1
+1974	1	6	69.39	0.1
+1975	1	6	69.39	0.1
+1976	1	6	69.39	0.1
+1977	1	6	69.39	0.1
+1978	1	6	69.39	0.1
+1979	1	6	69.39	0.1
+1980	1	6	69.39	0.1
+1981	1	6	69.39	0.1
+1982	1	6	69.39	0.1
+1983	1	6	69.39	0.1
+1984	1	6	69.39	0.1
+1985	1	6	69.39	0.1
+1986	1	6	69.39	0.1
+1987	1	6	69.39	0.1
+1988	1	6	69.39	0.1
+1989	1	6	69.39	0.1
+1990	1	6	69.39	0.1
+1991	1	6	69.39	0.1
+1992	1	6	69.39	0.1
+1993	1	6	69.39	0.1
+1994	1	6	69.39	0.1
+1995	1	6	69.39	0.1
+1996	1	6	69.39	0.1
+1997	1	6	69.39	0.1
+1998	1	6	69.39	0.1
+1999	1	6	69.39	0.1
+2000	1	6	69.39	0.1
+2001	1	6	69.39	0.1
+2002	1	6	69.39	0.1
+2003	1	6	69.39	0.1
+2004	1	6	69.39	0.1
+2005	1	6	69.39	0.1
+
+2006	1	7	7.91	0.01
+2007	1	7	8.07	0.01
+2008	1	7	27.60	0.01
+2009	1	7	21.50	0.01
+2010	1	7	22.60	0.01
+2011	1	7	19.80	0.01
+2012	1	7	27.30	0.01
+2013	1	7	28.10	0.01
+2014	1	7	19.70	0.01
+2015	1	7	5.74	0.01
+2016	1	7	12.70	0.01
+2017	1	7	7.63	0.01
+2018	1	7	2.75	0.01
+2019	1	7	5.28	0.01
+2020	1	7	2.52	0.01
+2021	1	7	4.12	0.01
+2022	1	7	9.82	0.01
+2023	1	7	6.44	0.01
+2024	1	7	5.57	0.01
+
+2006	1	8	42.80	0.01
+2007	1	8	44.90	0.01
+2008	1	8	47.40	0.01
+2009	1	8	57.00	0.01
+2010	1	8	58.60	0.01
+2011	1	8	59.90	0.01
+2012	1	8	83.50	0.01
+2013	1	8	65.40	0.01
+2014	1	8	51.20	0.01
+2015	1	8	50.90	0.01
+2016	1	8	55.00	0.01
+2017	1	8	45.70	0.01
+2018	1	8	33.00	0.01
+2019	1	8	24.00	0.01
+2020	1	8	27.50	0.01
+2021	1	8	11.50	0.01
+2022	1	8	2.46	0.01
+2023	1	8	3.68	0.01
+2024	1	8	6.83	0.01
+-9999 0 0 0 0
+
+# Indices
+#_CPUE_and_surveyabundance_observations
+#_Units:  0=numbers; 1=biomass; 2=F; 30=spawnbio; 31=recdev; 32=spawnbio*recdev; 33=recruitment; 34=depletion(&see Qsetup); 35=parm_dev(&see Qsetup)
+#_Errtype:  -1=normal; 0=lognormal; >0=T
+#_SD_Report: 0=no sdreport; 1=enable sdreport
+#_Fleet Units Errtype SD_Report -> NEEDED FOR ALL FLEETS
+    1     1      0      0   # Observer_inshore
+    2     1      0      0   # Pot_fisheries_historical
+    3     1      0      0   # Pot_fisheries_u10
+    4     1      0      0   # Pot_fisheries_10to12
+    5     1      0      0   # Pot_fisheries_o12
+    6     1      0      0   # Bycatch_fisheries
+    7     1      0      0   # Bycatch_fisheries_gillnet
+    8     1      0      0   # Bycatch_fisheries_trawl
+
+# For fishing fleets, CPUE is defined in terms of retained catch (biomass or numbers)
+# For fishery independent surveys, retention/discard is not defined so CPUE is implicitly in terms of total CPUE
+# If the fishery or survey has time-varying selectivity, this changing selectivity will be taken into account when calculating expected
+# values for the CPUE or survey index
+# Year values that are before start year or after end year are excluded from model, so the easiest way to include provisional data in a data
+# file is to put a negative sign on its year value
+# Duplicate survey observations for the same year are not allowed.
+# Observations that are to be included in the model but not included in the negative log likelihood need to have a negative sign on their fleet ID 
+# Previously the code for not using observations was to enter the observation itself as a negative value
+# However, that old approach prevented use of a Z-score environmental index as a “survey”. This approach is best for single or select years 
+# from an index rather than an approach to remove a whole index 
+# Removing a whole index from the model should be done through the use of lambdas at the bottom of the control file which will eliminate the 
+# index from model fitting
+# Observations can be entered in any order, except if the super-year feature is used
+# Super-periods are turned on and then turned back off again by putting a negative sign on the season. Previously, super-periods were started and stopped by entering
+#-9999 and the -9998 in the SE field
+
+#_yr month fleet obs stderr
+#2012	12	2	3.5253	3.8782
+#2013	12	2	2.9323	3.2572
+#2014	12	2	1.6301	1.3338
+#2015	12	2	0.4379	0.3459
+#2016	12	2	0.3340	0.2727
+#2017	12	2	0.6931	0.6667
+#2018	12	2	0.6362	0.6590
+#2019	12	2	0.1939	0.1962
+#2020	12	2	0.2731	0.2159
+#2021	12	2	0.2922	0.1543
+#2022	12	2	0.0520	0.0202
+
+2006	12	3	0.019	0.0889
+2007	12	3	0.018	0.0871
+2008	12	3	0.025	0.0862
+2009	12	3	0.176	0.0825
+2010	12	3	0.183	0.0816
+2011	12	3	0.21	0.0825
+2012	12	3	0.214	0.0816
+2013	12	3	0.224	0.0825
+2014	12	3	0.201	0.0825
+2015	12	3	0.182	0.0825
+2016	12	3	0.193	0.0825
+2017	12	3	0.146	0.0825
+2018	12	3	0.154	0.0825
+2019	12	3	0.147	0.0816
+2020	12	3	0.106	0.0825
+2021	12	3	0.114	0.0834
+2022	12	3	0.118	0.0834
+2023	12	3	0.11	0.0843
+2024	12	3	0.144	0.0843
+				
+2006	12	4	0.097	0.2585
+2007	12	4	0.121	0.2577
+2008	12	4	0.061	0.2577
+2009	12	4	0.058	0.2523
+2010	12	4	0.085	0.2515
+2011	12	4	0.145	0.2515
+2012	12	4	0.158	0.2515
+2013	12	4	0.103	0.2515
+2014	12	4	0.112	0.2515
+2015	12	4	0.102	0.2523
+2016	12	4	0.094	0.2523
+2017	12	4	0.182	0.2531
+2018	12	4	0.177	0.2523
+2019	12	4	0.236	0.2515
+2020	12	4	0.115	0.2523
+2021	12	4	0.166	0.2531
+2022	12	4	0.164	0.2539
+2023	12	4	0.157	0.2539
+2024	12	4	0.147	0.2562
+				
+2006	12	5	0.3187	0.470
+2007	12	5	0.3887	0.464
+2008	12	5	0.2816	0.472
+2009	12	5	0.5881	0.476
+2010	12	5	0.4257	0.465
+2011	12	5	0.3774	0.460
+2012	12	5	0.5724	0.459
+2013	12	5	1.6775	0.458
+2014	12	5	0.7899	0.459
+2015	12	5	0.5594	0.457
+2016	12	5	0.4016	0.454
+2017	12	5	0.2897	0.453
+2018	12	5	0.1519	0.456
+2019	12	5	0.2105	0.461
+2020	12	5	0.2314	0.458
+2021	12	5	0.1975	0.468
+2022	12	5	0.1540	0.465
+2023	12	5	0.1271	0.462
+2024	12	5	0.1036	0.485
+
+2006	12	7	0.846	0.2445
+2007	12	7	0.998	0.2191
+2008	12	7	1.329	0.1823
+2009	12	7	1.569	0.1773
+2010	12	7	1.704	0.1807
+2011	12	7	1.751	0.1723
+2012	12	7	2.21	0.1790
+2013	12	7	1.536	0.1714
+2014	12	7	1.041	0.1672
+2015	12	7	1.22	0.2046
+2016	12	7	1.049	0.1947
+2017	12	7	0.942	0.2103
+2018	12	7	0.822	0.2335
+2019	12	7	0.876	0.2601
+2020	12	7	0.456	0.2919
+2021	12	7	0.698	0.2882
+2022	12	7	0.586	0.2531
+2023	12	7	0.494	0.2437
+2024	12	7	0.807	0.2708
+
+#2016	12	8	2.028	2.334
+#2017	12	8	0.418	0.338
+#2018	12	8	0.404	0.413
+#2019	12	8	1.009	0.754
+#2020	12	8	1.141	1.161
+
+2006	12	8	0.273	0.1007
+2007	12	8	0.228	0.0971
+2008	12	8	0.462	0.1007
+2009	12	8	0.453	0.0998
+2010	12	8	0.446	0.0989
+2011	12	8	0.513	0.0971
+2012	12	8	0.535	0.0953
+2013	12	8	0.504	0.0962
+2014	12	8	0.615	0.1035
+2015	12	8	0.699	0.1026
+2016	12	8	0.576	0.1007
+2017	12	8	0.632	0.1026
+2018	12	8	0.563	0.1142
+2019	12	8	0.264	0.1080
+2020	12	8	0.389	0.1089
+2021	12	8	0.463	0.1398
+2022	12	8	0.47	0.2414
+2023	12	8	0.33	0.2143
+2024	12	8	0.43	1.1890
+
+#2019	9	1	0.460902	0.214961
+#2020	10	1	1.010719	0.303017
+#2022	9	1	0.393473	0.218049
+#2024	9	1	0.475876	0.188804
+
+
+-9999 1 1 1 1 # terminator for survey observations 
+
+# Discard
+5 #_N_fleets_with_discard
+#_discard_units (1=same_as_catchunits(bio/num); 2=fraction; 3=numbers)
+#_discard_errtype:  >0 for DF of T-dist(read CV below); 0 for normal with CV; -1 for normal with se; -2 for lognormal; -3 for trunc normal with CV
+# note: only enter units and errtype for fleets with discard 
+# note: discard data is the total for an entire season, so input of month here must be to a month in that season
+#_Fleet units errtype
+1          2       -1 # 
+2          2       -1 # 
+3          2       -1 # 
+4          2       -1 # 
+5          2       -1 # 
+
+#_Year Month Fleet Observation SE - fraction
+2019	9	1	0.523	0.228
+2020	9	1	0.523	0.228
+2021	12	1	0.523	0.228
+2022	10	1	0.572	0.146
+2023	9	1	0.492	0.227
+2024	9	1	0.505	0.312
+
+1962	12	2	0.523	0.228
+1963	12	2	0.523	0.228
+1964	12	2	0.523	0.228
+1965	12	2	0.523	0.228
+1966	12	2	0.523	0.228
+1967	12	2	0.523	0.228
+1968	12	2	0.523	0.228
+1969	12	2	0.523	0.228
+1970	12	2	0.523	0.228
+1971	12	2	0.523	0.228
+1972	12	2	0.523	0.228
+1973	12	2	0.523	0.228
+1974	12	2	0.523	0.228
+1975	12	2	0.523	0.228
+1976	12	2	0.523	0.228
+1977	12	2	0.523	0.228
+1978	12	2	0.523	0.228
+1979	12	2	0.523	0.228
+1980	12	2	0.523	0.228
+1981	12	2	0.523	0.228
+1982	12	2	0.523	0.228
+1983	12	2	0.523	0.228
+1984	12	2	0.523	0.228
+1985	12	2	0.523	0.228
+1986	12	2	0.523	0.228
+1987	12	2	0.523	0.228
+1988	12	2	0.523	0.228
+1989	12	2	0.523	0.228
+1990	12	2	0.523	0.228
+1991	12	2	0.523	0.228
+1992	12	2	0.523	0.228
+1993	12	2	0.523	0.228
+1994	12	2	0.523	0.228
+1995	12	2	0.523	0.228
+1996	12	2	0.523	0.228
+1997	12	2	0.523	0.228
+1998	12	2	0.523	0.228
+1999	12	2	0.523	0.228
+2000	12	2	0.523	0.228
+2001	12	2	0.523	0.228
+2002	12	2	0.523	0.228
+2003	12	2	0.523	0.228
+2004	12	2	0.523	0.228
+2005	12	2	0.523	0.228
+
+2006	12	3	0.523	0.228
+2007	12	3	0.523	0.228
+2008	12	3	0.523	0.228
+2009	12	3	0.523	0.228
+2010	12	3	0.523	0.228
+2011	12	3	0.523	0.228
+2012	12	3	0.523	0.228
+2013	12	3	0.523	0.228
+2014	12	3	0.523	0.228
+2015	12	3	0.523	0.228
+2016	12	3	0.523	0.228
+2017	12	3	0.523	0.228
+2018	12	3	0.523	0.228
+2019	9	3	0.523	0.228
+2020	12	3	0.523	0.228
+
+#2021	12	2	0.523	0.228
+#2022	9	2	0.572	0.146
+#2023	9	2	0.492	0.227
+#2024	9	2	0.505	0.312
+-9999 0 0 0.0 0.0 # terminator for discard data 
+
+# Mean Body Weight or Length
+0 #_use meanbodysize_data (0/1)
+#_COND_0 #_DF_for_meanbodysize_T-distribution_like
+# note:  type=1 for mean length; type=2 for mean body weight 
+#_yr month fleet part type obs stderr
+#  -9999 0 0 0 0 0 0 # terminator for mean body size data 
+
+# Population Length Bins
+# The first part of the length composition section sets up the bin structure for the population. These bins define the granularity of the 
+# age-length key and the coarseness of the length selectivity. Fine bins create smoother distributions, but a larger and slower running model. 
+# Notes
+# There are some items for users to consider when setting up population length bins:
+# For option 2, bin width should be a factor of min size and max size. For options 2 and 3, the data length bins must not be wider than 
+# the population length bins and the boundaries of the bins do not have to align. The transition matrix between population and data length 
+# bins is output to echoinput.sso.
+# The mean size at settlement (virtual recruitment age) is set equal to the min size of the first population length bin
+# When using more, finer population length bins, the model will create smoother length selectivity curves and smoother length distributions 
+# in the age-length key, but run more slowly (more calculations to do)
+# The mean weight-at-length, maturity-at-length and size-selectivity are based on the mid-length of the population bins. So these quantities 
+# will be rougher approximations if broad bins are defined
+# Provide a wide enough range of population size bins so that the mean body weight-at-age will be calculated correctly for the youngest and 
+# oldest fish. If the growth curve extends beyond the largest size bin, then these fish will be assigned a length equal to the mid-bin size for
+# the purpose of calculating their body weight.
+# While exploring the performance of models with finer bin structure, a potentially pathological situation has been identified. When the bin 
+# structure is coarse (note that some applications have used 10 cm bin widths for the largest fish), it is possible
+# for a selectivity slope parameter or a retention parameter to become so steep that all of the action occurs within the range of a single 
+# size bin. In this case, the model will see zero gradient of the log likelihood with respect to that parameter and convergence will be hampered.
+# set up population length bin structure (note - irrelevant if not using size data and using empirical wtatage
+2 # length bin method: 1=use databins; 2=generate from binwidth,min,max below; 3=read vector
+# generate from bin width min max, read next:
+0.5 # Bin width
+3 # Lower size of first bin
+24 # Lower size of largest bin
+# The number of bins is then calculated from: (max Lread - min Lread)/(bin width) + 1
+
+# Length Composition Data Structure
+# If value 1 is entered, all data weighting options for composition data apply equally to all partitions within a fleet
+# If value 2 is entered, then the data weighting options are applied by the partition specified. Note that the partitions must be entered in
+# numerical order within each fleet
+# If the value for fleet is negative, the vector of inputs is copied to all partitions (0 = combined, 1 = discard, and 2 = retained) for 
+# that fleet and all higher numbered fleets
+1 # Use length composition data (0/1/2)
+#_mintailcomp: upper and lower distribution for females and males separately are accumulated until exceeding this level.
+#_addtocomp:  after accumulation of tails; this value added to all bins
+#_combM+F: males and females treated as combined gender below this bin number 
+#_compressbins: accumulate upper tail by this number of bins; acts simultaneous with mintailcomp; set=0 for no forced accumulation
+#_Comp_Error:  0=multinomial, 1=dirichlet
+#_ParmSelect:  parm number for dirichlet
+#_minsamplesize: minimum sample size; set to 1 to match 3.24, minimum value is 0.001
+
+#_mintailcomp addtocomp combM+F CompressBins CompError ParmSelect minsamplesize - NEEDED FOR ALL FLEETS EVEN IF NO COMP DATA
+    -1         1e-04       0       0          0           0       0.01    #_fleet:1_observer
+    -1         1e-04       0       0          0           0       0.01    #_fleet:2_Pot_Fishery
+    -1         1e-04       0       0          0           0       0.01    #_fleet:3_Pot_Fishery
+    -1         1e-04       0       0          0           0       0.01    #_fleet:4_Pot_Fishery
+    -1         1e-04       0       0          0           0       0.01    #_fleet:5_Pot_Fishery
+    -1         1e-04       0       0          0           0       0.01    #_fleet:6_fishery_bycatch
+    -1         1e-04       0       0          0           0       0.01    #_fleet:7_fishery_bycatch
+    -1         1e-04       0       0          0           0       0.01    #_fleet:8_fishery_bycatch
+
+# Length Composition Data
+# Composition data can be entered as proportions, numbers, or values of observations by length bin based on data expansions.
+# The data bins do not need to cover all observed lengths. The selection of data bin structure should be based on the observed distribution of
+# lengths and the assumed growth curve. If growth asymptotes at larger lengths, having additional length bins across these
+# sizes may not contribute information to the model and may slow model run time.
+# the lower length bin selection should be selected such that, depending on the size selection, to allow for information on smaller fish and 
+# possible patterns in recruitment.
+# While set separately users should ensure that the length and age bins align. It is recommended to explore multiple configurations of length 
+# and age bins to determine the impact of this choice on model estimation.
+# sex codes:  0=combined; 1=use female only; 2=use male only; 3=use both as joint sexxlength distribution
+# partition codes:  (0=combined; 1=discard; 2=retained
+42 #_N_LengthBins; then enter lower edge of each length bin
+3.0	3.5	4.0	4.5	5.0	5.5	6.0	6.5	7.0	7.5	8.0	8.5	9.0	9.5	10.0	10.5	11.0	11.5	12.0	12.5	13.0	13.5	14.0	14.5	15.0	15.5	16.0	16.5	17.0	17.5	18.0	18.5	19.0	19.5	20.0	20.5	21.0	21.5	22.0	22.5	23.0	23.5
+
+#_yr month fleet sex part Nsamp datavector(female-male)
+1983	9	2	3	2	2.332	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0.004651163	0.027906977	0.037209302	0.060465116	0.065116279	0.069767442	0.069767442	0.069767442	0.060465116	0.041860465	0.03255814	0.004651163	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0.03255814	0.055813953	0.069767442	0.055813953	0.046511628	0.046511628	0.041860465	0.041860465	0.023255814	0.023255814	0.009302326	0.004651163	0.004651163	0	0	0	0	0	0	0	0	0
+1984	8	2	3	2	2.225	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0.005952381	0.017857143	0.035714286	0.047619048	0.041666667	0.047619048	0.05952381	0.05952381	0.047619048	0.047619048	0.029761905	0.029761905	0.011904762	0.005952381	0.011904762	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0.005952381	0.023809524	0.041666667	0.053571429	0.05952381	0.029761905	0.041666667	0.053571429	0.05952381	0.047619048	0.035714286	0.017857143	0.005952381	0.005952381	0.011904762	0.005952381	0	0	0	0	0	0	0
+1985	6	2	3	2	2.057	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0.00877193	0.043859649	0.052631579	0.087719298	0.070175439	0.043859649	0.052631579	0.00877193	0.01754386	0.026315789	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0.026315789	0.043859649	0.052631579	0.052631579	0.078947368	0.070175439	0.078947368	0.035087719	0.061403509	0.026315789	0.035087719	0.01754386	0	0.00877193	0	0	0	0	0	0	0	0
+1988	6	2	3	2	1.929	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0.047058824	0.058823529	0.047058824	0.058823529	0.058823529	0.035294118	0.011764706	0.023529412	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0.035294118	0.058823529	0.082352941	0.058823529	0.070588235	0.058823529	0.070588235	0.035294118	0.011764706	0.023529412	0.011764706	0.011764706	0.035294118	0.035294118	0.047058824	0	0.011764706	0	0	0	0	0	0	0	0
+1989	9	2	3	2	2.771	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0.006779661	0.030508475	0.047457627	0.047457627	0.061016949	0.054237288	0.055932203	0.055932203	0.054237288	0.052542373	0.037288136	0.028813559	0.023728814	0.010169492	0.005084746	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0.005084746	0.015254237	0.047457627	0.044067797	0.050847458	0.047457627	0.03220339	0.033898305	0.027118644	0.025423729	0.023728814	0.016949153	0.022033898	0.015254237	0.011864407	0.003389831	0.005084746	0	0.001694915	0	0	0	0	0	0
+1990	6	2	3	2	2.100	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0.007936508	0.023809524	0.047619048	0.03968254	0.063492063	0.055555556	0.03968254	0.03968254	0.03968254	0.03968254	0.03968254	0.031746032	0.023809524	0.007936508	0	0.007936508	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0.031746032	0.023809524	0.095238095	0.079365079	0.063492063	0.047619048	0.047619048	0.023809524	0.015873016	0.015873016	0.007936508	0.007936508	0.031746032	0	0	0	0	0	0	0	0	0	0	0	0
+1991	9	2	3	2	2.688	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0.004098361	0.010245902	0.041803279	0.05942623	0.05942623	0.057377049	0.057377049	0.05942623	0.055327869	0.057377049	0.023770492	0.004098361	0.00204918	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0.008196721	0.014344262	0.027868852	0.057377049	0.053278689	0.05942623	0.047131148	0.047131148	0.049180328	0.040983607	0.047131148	0.047131148	0.006147541	0.00204918	0	0	0	0	0	0	0	0
+1992	6	2	3	2	2.182	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0.006578947	0.046052632	0.065789474	0.065789474	0.065789474	0.065789474	0.059210526	0.052631579	0.039473684	0.032894737	0.019736842	0.019736842	0	0.006578947	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0.006578947	0.026315789	0.039473684	0.052631579	0.059210526	0.039473684	0.052631579	0.032894737	0.019736842	0.046052632	0.026315789	0.026315789	0.013157895	0.013157895	0	0	0	0	0	0	0	0	0
+1994	11	2	3	2	3.296	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	5.06E-04	0	0.030601922	0.050986343	0.050986343	0.050986343	0.050986343	0.050986343	0.050986343	0.050986343	0.050986343	0.050986343	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	5.06E-04	0.002529084	0.002529084	0.002529084	0.002529084	0.053515427	0.053515427	0.053515427	0.053009611	0.050986343	0.050986343	0.050986343	0.050986343	0.050986343	0.030601922	0	0	0	0	0	0	0	0
+1998	8	2	3	2	3.653	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	2.22E-04	0.002513345	0.013812278	0.030827402	0.04911032	0.04911032	0.04911032	0.055048932	0.054826512	0.054826512	0.054826512	0.045240214	0.029581851	0.02455516	0.019773132	0.011298932	0.003758897	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	6.67E-04	0.002513345	0.015080071	0.04430605	0.04911032	0.04911032	0.061098754	0.061098754	0.061098754	0.045240214	0.030827402	0.019884342	0.006272242	0.00502669	0	0	0	0	0	0	0	0	0
+1999	9	2	3	2	4.375	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0.010188425	0.018829828	0.040774776	0.05261982	0.054655819	0.054655819	0.054655819	0.054655819	0.053812756	0.053260549	0.050689205	0.042469334	0.040087679	0.026484846	0.004076213	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0.011992581	0.03176664	0.03083927	0.024798719	0.033229355	0.033229355	0.033229355	0.036108418	0.044467395	0.044467395	0.033587658	0.020848965	0.009547696	0	0	0	0	0	0	0	0
+2000	9	2	3	2	4.293	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	2.04E-04	0.00105011	0.00822246	0.022878116	0.045725646	0.051231075	0.051333027	0.051011877	0.050135087	0.04972218	0.048121527	0.042208289	0.033562726	0.032828669	0.02987205	0.016618239	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	3.06E-04	5.61E-04	0.002829179	0.007177448	0.041596574	0.051384004	0.052250599	0.051995718	0.051995718	0.043737575	0.037819238	0.03616761	0.036116634	0.020895142	0.016592751	0.008079727	0.002064536	0.002064536	0.001651629	0	0	0	0	0
+2001	8	2	3	2	4.510	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	9.26E-05	0.008828706	0.019806689	0.03099157	0.044952599	0.049420992	0.049420992	0.049420992	0.049420992	0.043405491	0.030843344	0.030383226	0.026307013	0.020921471	0.013426798	0.007791125	0.007448353	0.007448353	0.007448353	0.007448353	0.001488435	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0.001865176	0.0163697	0.044152796	0.046496619	0.048043727	0.048043727	0.048043727	0.048318562	0.047528024	0.045094648	0.030725998	0.027063583	0.023990983	0.013374301	0.003409196	7.69E-04	0	0	0	0	0	0
+2002	8	2	3	2	2.866	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0.028707483	0.057006803	0.078367347	0.083809524	0.085170068	0.113877551	0.092380952	0.049387755	0.049387755	0.049387755	0.049387755	0.035102041	0.002721088	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0.002721088	0.013605442	0.013605442	0.014965986	0.023129252	0.027210884	0.027210884	0.019047619	0.013605442	0.013605442	0.013605442	0.013605442	0.006802721	0.006802721	0.006802721	0.006802721	0.001360544	0	0	0	0	0	0
+2003	9	2	3	2	4.990	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	6.85E-04	0.007015569	0.017898195	0.030462553	0.049391486	0.061901594	0.064402182	0.062229137	0.054875789	0.042363635	0.03846894	0.027711189	0.022187989	0.015659642	0.009207038	0.003964298	0.002973479	0.001771805	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	3.33E-04	0.002413585	0.00726532	0.020055887	0.043920489	0.05614502	0.055597408	0.049862329	0.0458489	0.045056655	0.043005415	0.029354023	0.024593386	0.022661904	0.018404864	0.008396368	0.007718763	0.005605085	5.91E-04	0	0	0	0	0
+2004	5	2	3	2	3.679	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	2.09E-04	0.006174131	0.02542905	0.050397656	0.052009209	0.052218501	0.047865216	0.042904981	0.0378401	0.034282126	0.034282126	0.034282126	0.032670573	0.029447468	0.028024278	0.025512767	0.005609041	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0.001046463	0.006362495	0.028107995	0.049958141	0.053055672	0.053055672	0.053055672	0.053055672	0.053055672	0.046860611	0.034365843	0.017873587	0.006195061	0.002658016	0.002134784	0	0	0	0	0	0	0
+2005	8	2	3	2	3.508	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0.001240695	0.005645161	0.026364764	0.041004963	0.049162531	0.05412531	0.055676179	0.053815136	0.051023573	0.049472705	0.047301489	0.029032258	0.020533499	0.008281638	0.005490074	0.00471464	0.001550868	0.001240695	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	9.31E-04	0.001550868	0.003722084	0.013709677	0.035235732	0.045657568	0.052884615	0.051023573	0.051023573	0.051954094	0.047084367	0.045533499	0.04398263	0.032040943	0.017276675	3.10E-04	0	0	0	0	0	0	0
+
+2006	9	3	3	2	3.936	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0.0045044	0.026991663	0.045333488	0.046144048	0.046144048	0.046144048	0.046028254	0.045217693	0.044986105	0.044986105	0.044986105	0.044986105	0.022498842	0.013501621	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	3.47E-04	5.79E-04	0.041072256	0.045565076	0.045912459	0.046144048	0.046144048	0.045565076	0.045565076	0.045565076	0.041072256	0.023077814	0.023077814	0.023077814	0.004735989	0	0	0	0	0	0	0
+2007	7	3	3	2	2.897	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0.008756345	0.043654822	0.043654822	0.05	0.05	0.05	0.05	0.038959391	0.031725888	0.031725888	0.031725888	0.016497462	0.006345178	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0.005076142	0.032614213	0.043654822	0.043654822	0.048730964	0.05	0.05	0.05	0.05	0.05	0.05	0.034771574	0.024619289	0.014720812	0	0	0	0	0	0	0	0	0
+2008	9	3	3	2	3.171	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0.002025658	0.006752194	0.006752194	0.009453072	0.043484132	0.044159352	0.044159352	0.044159352	0.043484132	0.040783255	0.038757596	0.037407157	0.036731938	0.032680621	0.030654963	0.030654963	0.030654963	0.012288994	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	6.75E-04	0.003376097	0.003376097	0.007427414	0.038082377	0.044159352	0.044159352	0.044159352	0.044159352	0.044159352	0.044159352	0.044159352	0.044159352	0.038757596	0.01910871	0	0	0	0	0	0	0	0
+2009	2	3	3	2	2.991	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0.005617978	0.032890705	0.051378958	0.051378958	0.051378958	0.051378958	0.051378958	0.051378958	0.051378958	0.048314607	0.046271706	0.046271706	0.036976507	0.018488253	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0.004596527	0.027783453	0.050357508	0.051378958	0.051378958	0.049336057	0.046271706	0.03237998	0.02308478	0.02308478	0.02308478	0.02308478	0	0	0	0	0	0	0	0	0
+2016	7	3	3	2	4.015	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0.002509653	0.036370656	0.066631274	0.066669884	0.059333977	0.077779923	0.043552124	0.07046332	0.030704633	0.039208494	0.026023166	0.01465251	0.008204633	0.006254826	0.003793436	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0.005791506	0.020916988	0.040723938	0.046274131	0.044990347	0.049749035	0.025965251	0.033436293	0.041689189	0.040144788	0.035501931	0.023687259	0.014430502	0.004169884	0.008146718	0.008146718	0.004073359	0	0	0	0
+2017	7	3	3	2	3.694	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0.003538928	0.009868554	0.009726997	0.0429727	0.065075834	0.071162791	0.069868554	0.095146613	0.051668352	0.077148635	0.069464105	0.053185035	0.024165824	0.00950455	0.00677452	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0.001617796	0.00479272	0.015085945	0.030151668	0.051122346	0.0439636	0.055733064	0.04364004	0.029787664	0.022831143	0.006066734	0.002932255	0.008190091	0.007178969	0.002224469	0.007583418	0	0.00677452	8.09E-04	0	0	0	0
+2018	3	3	3	2	3.995	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	7.99E-04	0.010194175	0.034991909	0.040372168	0.067506068	0.06256068	0.083930016	0.074221278	0.065766586	0.057453479	0.04839199	0.035568366	0.01726335	0.007099515	0.003276699	1.01E-04	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	7.99E-04	0.002396845	0.017981392	0.030188107	0.058444579	0.035032362	0.047319984	0.035912217	0.031583738	0.029055421	0.015978964	0.015877832	0.019043285	0.009526699	0.009526699	0.012702265	0.003175566	0.006351133	0.006351133	0	0	0	0.003175566
+2019	7	3	3	2	3.646	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0.024745533	0.066681746	0.094729699	0.081090251	0.10959059	0.084030762	0.072223479	0.057679258	0.025718163	0.054670889	0.016919249	0.016421624	0.018774033	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0.022370504	0.042207645	0.052499435	0.037276634	0.028183669	0.027369373	0.020312147	0.010992988	0.011716806	0.008527482	0.007351278	0.00432029	0.003732187	0	0	0	0	0	0	0	0
+2020	9	3	3	2	2.744	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0.007207207	0.032432432	0.084684685	0.046846847	0.061261261	0.063063063	0.052252252	0.03963964	0.063063063	0.01981982	0.01981982	0.005405405	0.005405405	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0.036036036	0.052252252	0.088288288	0.088288288	0.05045045	0.072072072	0.045045045	0.030630631	0.016216216	0.014414414	0	0	0.005405405	0	0	0	0	0	0	0	0
+
+2019	9	1	3	0	3.705	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0.023840537	0.024037892	0.043872114	0.050463785	0.06496941	0.045707519	0.047503454	0.033826722	0.050148017	0.098204066	0.064574699	0.039984212	0.015966055	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0.123998421	0.030274324	0.103374778	0.033609631	0.019439511	0.044345767	0.019242155	0.013183343	0.00473653	0.001184133	0.001184133	0.001184133	0	0	0.001184133	0	0	0	0	0
+2020	2	1	3	0	3.196	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0.002547771	0	0.002547771	0.010254777	0.002547771	0.017834395	0.013375796	0.011528662	0.015923567	0.004458599	0.008917197	0	0.002547771	0.004458599	0.013375796	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0.322675159	0.039235669	0.28343949	0.048152866	0.039235669	0.117707006	0.039235669	0	0	0	0	0	0	0	0	0	0	0	0	0
+2022	5	1	3	0	3.287	0	0	0	0	0	0	0	0	0	7.74E-04	0.001342282	0	0	1.03E-04	0.001806918	0.003871967	0.004284977	0.010841507	0.017552917	0.047134744	0.043933918	0.033660299	0.012958183	0.017088281	0.011306144	2.07E-04	5.16E-04	0.002271554	6.71E-04	0	0.001806918	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0.003200826	0.006350026	0	0.003200826	0	0.004543108	0.008156944	0.007021167	0.005007744	0.018843573	0.012235416	0.019824471	0.020908622	0.025967992	0.036035106	0.054155911	0.12188952	0.144450181	0.106866288	0.0694889	0.045224574	0.023593185	0.030924109	0.010067114	0.003304078	0.001755292	0.001806918	0	0	0	0	0	0	0	0	0	0	0	0
+2023	9	1	3	0	3.491	0	0	0	0	0	0	0	0	0	0	0.002774194	0	0	0.01583871	0.007709677	0.005096774	0.008290323	0.002774194	0.014064516	0.006483871	0.019	0.01583871	0.032129032	0.013935484	0.022193548	0.014064516	0.014096774	0.018741935	0.004935484	0.005225806	0.012322581	0.001193548	0.014516129	0.009193548	0.001645161	0.007419355	0.009580645	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0.005548387	4.84E-04	0.010806452	0.013387097	0.006	0.040322581	0.036903226	0.018548387	0.071645161	0.05583871	0.063354839	0.093322581	0.052580645	0.062193548	0.069645161	0.017548387	0.027645161	0.023870968	0.006322581	0.019741935	9.68E-04	0.012354839	0.005709677	0.002903226	0.002774194	0	0	0	4.84E-04	0	0	0
+2024	9	1	3	0	3.493	0	0	0	0	0	0	0	0	0	0.001543408	3.86E-04	0.004823151	0.004019293	0.003279743	0.008488746	0.009485531	0.025048232	0.005819936	0.027491961	0.032765273	0.039967846	0.044726688	0.028167203	0.021157556	0.014083601	0.008778135	0.013536977	0.006720257	0.004630225	0.005176849	0.004565916	0.004533762	0.005144695	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0.00244373	9.65E-04	3.86E-04	0.007073955	0.003054662	0.004115756	0.012636656	0.016270096	0.012765273	0.011414791	0.018360129	0.037909968	0.06562701	0.088810289	0.085755627	0.094083601	0.063376206	0.048874598	0.047459807	0.023440514	0.011350482	0.007009646	0.007942122	0.001221865	0.001318328	0.001318328	0	0	0	0	0	0	0	0	0
+
+2019	9	1	3	2	3.656	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0.060971302	0.060309051	0.075055188	0.07214128	0.048697572	0.017571744	0.074790287	0.137461369	0.096467991	0.04209713	0.028498896	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0.081545254	0.027064018	0.065275938	0.028013245	0.014944812	0.029205298	0.014724062	0.014746137	0.005298013	0.001324503	0.001324503	0.001324503	0	0	0.001324503	0	0	0	0	0
+2022	10	1	3	2	2.581	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0.065879265	0.082677165	0.048293963	0.001049869	0	0.008923885	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0.325721785	0.202624672	0.107874016	0.104986877	0.042519685	0	0.008923885	0	0	0	0	0	0	0	0	0	0	0	0	0
+2023	9	1	3	2	2.549	0	0	0	0	0	0	0	0	0	0	0	0	0	0.024011299	0	0	0	0	0	0	0	0.025423729	0.156779661	0.024576271	0.030225989	0.006214689	0.024011299	0.024011299	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0.029378531	0.131073446	0.242937853	0.153672316	0.025141243	0	0.074858757	0	0	0	0	0	0.025423729	0	0	0	0	0	0	0	0
+2024	9	1	3	2	3.154	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0.036210526	0.070385965	0.04554386	0.028701754	0.021263158	0.009894737	0.004210526	0.009824561	0.007298246	0.004210526	0.004070175	0.008280702	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0.004070175	0	0	0	0	0	0.004070175	0	0.004070175	0.008280702	0.015298246	0.086315789	0.18877193	0.131859649	0.102596491	0.091578947	0.048280702	0.02477193	0.01445614	0.017333333	0.005263158	0.002877193	0	0	0	0	0	0	0	0	0	0
+
+2019	9	1	3	1	2.975	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0.085365854	0.095015907	0.056415695	0.060869565	0.074973489	0.028207847	0.042311771	0.112937434	0.065005302	0.159703075	0.112089077	0.093531283	0.014103924	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+2022	10	1	3	1	2.974	0	0	0	0	0	0	0	0	0	0	0	0	0	0	9.55E-04	0.006581741	0	0.007324841	0.007324841	0.068577495	0.067303609	0.054989384	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0.006581741	0.013057325	0	0.006581741	0	0.006581741	0.013057325	0.013057325	0.006581741	0.020382166	0.010191083	0.018683652	0.005626327	0.01581741	0.014861996	0.046921444	0.176751592	0.236730361	0.168577495	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+2023	9	1	3	1	2.491	0	0	0	0	0	0	0	0	0	0	0	0	0	0.004516129	0	0	0	0	0.014193548	0.037096774	0.037096774	0.045806452	0.041612903	0.006774194	0.006774194	0.079032258	0.006774194	0	0	0	0.027419355	0.007096774	0	0.059354839	0.006774194	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0.004516129	0	0.004516129	0.031935484	0	0	0.13	0.089032258	0.168709677	0.169032258	0	0.013870968	0	0	0	0.006774194	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+2024	9	1	3	1	3.242	0	0	0	0	0	0	0	0	0	0.002752294	6.88E-04	0.008600917	0.007167431	0.005848624	0.015137615	0.016915138	0.044667431	0.01037844	0.049025229	0.058428899	0.071272936	0.05940367	0.008658257	0.002350917	0.002866972	6.88E-04	0.021788991	0.008600917	0.002580275	0.003325688	0.004701835	0.004701835	0.002350917	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0.004357798	0.001720183	6.88E-04	0.009231651	0.005447248	0.00733945	0.022534404	0.029013761	0.022419725	0.017029817	0.032740826	0.063876147	0.109919725	0.14581422	0.079529817	0.012442661	0.004931193	0.003325688	0.009805046	0.002350917	0	6.88E-04	0	0	0	0.002350917	0	0	0	0	0	0	0	0	0
+-9999	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+
+# Excluding Data
+# If the value of year is negative, then that observation is not transferred into the working array. This feature is the easiest way to include observations in a data file
+# but not to use them in a particular model scenario.
+# If the value of fleet in the length or age composition observed data line is negative, then the observation is processed and its expected value and log likelihood are
+# calculated, but this log likelihood is not included in the total log likelihood. This feature allows the user to see the fit to a provisional observation without having 
+# that observation affect the model.
+
+# Age Composition Option
+# The age composition section begins by reading the number of age bins. If the value 0 is entered for the number of age bins, then skips reading the bin structure and all reading 
+# of other age composition data inputs.
+0 #_N_age_bins - Number of age bins; can be equal to 0 if age data are not used; do not include a vector of agebins if the number of age bins 
+# is set equal to 0.
+#0 1 2 3 4 5 6 7 8 9
+#1 #_N_ageerror_definitions
+#0.5 1.5 2.5 3.5 4.5 5.5 6.5 7.5 8.5 9.5 10.5 11.5 12.5 13.5 14.5 15.5
+#0.001 0.001 0.001 0.001 0.001 0.001 0.001 0.001 0.001 0.001 0.001 0.001 0.001 0.001 0.001 0.001
+
+# Age Composition Specification
+#_mintailcomp: upper and lower distribution for females and males separately are accumulated until exceeding this level.
+#_addtocomp:  after accumulation of tails; this value added to all bins
+#_combM+F: males and females treated as combined gender below this bin number 
+#_compressbins: accumulate upper tail by this number of bins; acts simultaneous with mintailcomp; set=0 for no forced accumulation
+#_Comp_Error:  0=multinomial, 1=dirichlet
+#_ParmSelect:  parm number for dirichlet
+#_minsamplesize: minimum sample size; set to 1 to match 3.24, minimum value is 0.001# Conditional Age-at-Length
+#_mintailcomp addtocomp combM+F CompressBins CompError ParmSelect minsamplesize
+#-1 1e-07 0 0 0 0 0.01 #_fleet:1_Fleet
+#-1 1e-07 0 0 0 0 0.01 #_fleet:2_Acoustic
+#-1 1e-07 0 0 0 0 0.01 #_fleet:3_Gillnet_Survey
+#3 #_Lbin_method_for_Age_Data: 1=poplenbins; 2=datalenbins; 3=lengths
+
+# Conditional Age-at-Length
+# sex codes:  0=combined; 1=use female only; 2=use male only; 3=use both as joint sexxlength distribution
+# partition codes:  (0=combined; 1=discard; 2=retained
+#_yr month fleet sex part ageerr Lbin_lo Lbin_hi Nsamp datavector(female-male)
+#-9999  0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+
+# Mean Length or Body Weight-at-Age
+0 #_Use_MeanSize-at-Age_obs (0/1)
+
+# Environmental Data
+0 #_N_environ_variables
+# -2 in yr will subtract mean for that env_var; -1 will subtract mean and divide by stddev (e.g. Z-score)
+#Yr Variable Value
+
+# Generalized Size Composition Data
+# Number (N) of size frequency methods to be read. If this value is 0, then omit all entries below. A value of -1 (or any negative value) 
+# triggers expanded optional inputs below that allow for Dirichlet for fitting these data.
+0 # N sizefreq methods to read 
+
+# Tag-Recapture Data
+0 # do tags (0/1) - If this value is 0, then omit all entries below
+
+# Stock (Morph) Composition Data
+0 # morphcomp data(0/1) - if zero, then do not enter any further input below.
+#  Nobs, Nmorphs, mincomp
+#  yr, seas, type, partition, Nsamp, datavector_by_Nmorphs
+
+# Selectivity Empirical Data (future feature)
+0  # Do dataread for selectivity priors(0/1)
+# Yr, Seas, Fleet,  Age/Size,  Bin,  selex_prior,  prior_sd
+# feature not yet implemented
+
+# Data Super-Periods
+
+999
