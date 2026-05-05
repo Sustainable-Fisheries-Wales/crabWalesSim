@@ -1,8 +1,8 @@
 # simulation testing for the stock assessment model of brown/edible crab in Welsh waters
 
-# a.OM scenarios
+# OM scenarios
 # 1.varying fishing mortality (F:high, low)
-# 2.varying variance in stock productivity (V:high, meidum, low)
+# 2.varying variance in stock productivity (V:high, medium, low)
 
 # EM scenarios (for each OM scenario)
 # misspecification (low or high) in:
@@ -10,18 +10,17 @@
 # 2.steepness
 # 3.selectivity params (length-at-50% selectivity)
 # 4.asymptotic length (growth param)
-# 5.varying effective sample size (ESS)
 
-#pak::pkg_install("ss3sim/ss3sim")
 
 # load functions to condition base, set om & em scenarios,and update om & em
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
-source("condition_base_wales_lobster.R")
-source("om_scenarios_wales_lobster.R")
-source("em_scenarios_wales_lobster.R")
+source("condition_base_wales_crab.R")
+source("om_scenarios_wales_crab.R")
+source("em_scenarios_wales_crab.R")
 source("generate_om_em_id.R")
-source("update_om_wales_lobster.R")
-source("update_em_wales_lobster.R")
+source("update_om_wales_crab.R")
+source("update_em_wales_crab.R")
+#pak::pkg_install("ss3sim/ss3sim")
 
 # set up the base model
 setwd("..")
@@ -39,34 +38,38 @@ fore_base <- r4ss::SS_readforecast(file = file.path(dir.base, "forecast.ss"), ve
 start_base <- r4ss::SS_readstarter(file = file.path(dir.base, "starter.ss"),  verbose = FALSE)
 dat_base <- r4ss::SS_readdat(file = file.path(dir.base, "data.ss"), verbose = FALSE)
 ctl_base <- r4ss::SS_readctl(file = file.path(dir.base, "control.ss"), verbose = FALSE, use_datlist = TRUE, datlist = dat_base)
+f_base <- as.data.frame(readr::read_csv(file = "fleet_f_ctl.csv")) 
 
-condition_base(fore_base = fore_base, 
+condition_base(dir.base = dir.base, 
+               fore_base = fore_base, 
                start_base = start_base, 
                dat_base = dat_base, 
                ctl_base = ctl_base, 
-               dir.base = dir.base, 
+               f_base = f_base,
                nyears = nyears, 
                datfile = "ss3.dat", 
-               ctlfile = "ss3.ctl",
-               fleet_catch = c(2:8), 
+               ctlfile = "ss3.ctl" ,
+               fleet_catch = as.integer(rownames(dat_base$fleetinfo)[dat_base$fleetinfo$surveytiming==-1]), 
                fleet_cpue = unique(dat_base$CPUE$index), 
+               fleet_cpue_fore = c(3),
                fleet_discard = c(1,2,3), 
                len_sex = 3, 
-               len_Nsamp = 1, 
+               len_Nsamp = 5, 
                dat_month = 7,
                fleet_obs = 1, 
                fleet_historical = c(2, 6), 
                fleet_target = c(3, 4, 5), 
                fleet_bycatch = c(7, 8), 
-               fleet_prerecruit = 9,
-               fleet_len <- unique(dat_base$lencomp$fleet),
-               len_part = c(0), 
+               fleet_len = unique(dat_base$lencomp$fleet),
+               len_part = c(0), # 0=all; 1=discard; 2=retained; as defined in ss3
                F_Method = 2,  
                overwrite = TRUE) 
 
 # test base model
 r4ss::copy_SS_inputs(dir.old = dir.base, dir.new = "test_base_model_dir", overwrite = TRUE)
-r4ss::run(dir = "test_base_model_dir", extras = extras_om, exe = ss3exe, 
+r4ss::run(dir = "test_base_model_dir", 
+          extras = extras_om, 
+          exe = ss3exe, 
           skipfinished = FALSE, 
           show_in_console = FALSE) # switch to FALSE when not testing
 
@@ -74,14 +77,13 @@ r4ss::run(dir = "test_base_model_dir", extras = extras_om, exe = ss3exe,
 #~~~~~~~~~~~~~~~~~~~~~~~~~
 # select scenarios options
 # OM scenarios
-# SCENARIO0: obs F & est sigmaR 
+# SCENARIO0: obs F & est sigmaR
 # SCENARIO1: low F & low sigmaR
 # SCENARIO2: low F & mid sigmaR
 # SCENARIO3: low F & high sigmaR
 # SCENARIO4: high F & low sigmaR
 # SCENARIO5: high F & mid sigmaR
 # SCENARIO6: high F & high sigmaR
-# select om scenario
 
 # EM scenarios (specific to OM scenario)
 # modify param values for misspecification scenarios: Value that results in ~10% decrease/increase in terminal SSB
@@ -109,7 +111,7 @@ scenario_om <- 0 # 0 (base) to 6
 (F_multi <- om_scenario(scenario_om)[1])
 (sigmaR_dev <- om_scenario(scenario_om)[2])
 
-iteration <- 1
+iteration <- 100
 extra_cores <- 4
 
 # run simulations though em scenarios
@@ -155,7 +157,8 @@ for (scen_em in 1:ncol(scenario_em)) {
   # effective sample size for lencomp
   (ess <- em_scenario(scenario_m=scenario_m, scenario_st=scenario_st, scenario_sl=scenario_sl, 
                       scenario_linf=scenario_linf, scenario_ess=scenario_ess, scenario_om=scenario_om)[11])
-
+  # (OPTIONAL) degree of overdispersion in comp data (if used w/DM method)
+  
   # create a new om folder
   scenarioID <- scenario_id(scenario_m=scenario_m, scenario_st=scenario_st, scenario_sl=scenario_sl, 
                             scenario_linf=scenario_linf, scenario_ess=scenario_ess, scenario_om=scenario_om)
@@ -169,7 +172,7 @@ for (scen_em in 1:ncol(scenario_em)) {
     
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # run simulations in parallel
-  # Setup parallel cores and iterations to run
+  ## Setup parallel cores and iterations to run
   # clean up clusters
   unregister_dopar <- function() {
       env <- foreach:::.foreachGlobals
@@ -184,9 +187,8 @@ for (scen_em in 1:ncol(scenario_em)) {
   cl <- makeCluster(as.numeric(Sys.getenv("NUMBER_OF_PROCESSORS")) - extra_cores, outfile="", type = "SOCK")
   doSNOW::registerDoSNOW(cl)
 
-  # Create a progress bar
+    # Create a progress bar
   pb <- txtProgressBar(min = 0, max = 10, style = 3)
-  
   # Progress function to update the bar
   progress <- function(n) {
     setTxtProgressBar(pb, n)
@@ -213,7 +215,7 @@ for (scen_em in 1:ncol(scenario_em)) {
     ctl_om <- r4ss::SS_readctl(file = file.path(new_mod_path_om, "ss3.ctl"), verbose = FALSE, use_datlist = TRUE, datlist = dat_om)
     fore_om <- r4ss::SS_readforecast(file = file.path(new_mod_path_om, "forecast.ss"), verbose = FALSE)
     
-    # 4.update om files
+    # 4.modify files
     update_om(fore_om = fore_om, 
               start_om = start_om, 
               dat_om = dat_om, 
@@ -225,7 +227,7 @@ for (scen_em in 1:ncol(scenario_em)) {
               ess = ess, 
               sigmaR_dev = sigmaR_dev, 
               F_mult = F_mult, 
-              scenario= scenario,
+              scenario = scenario,
               inityr_recdev = 1983, 
               inityr_fore = 2025,
               overwrite = TRUE)
@@ -256,9 +258,12 @@ for (scen_em in 1:ncol(scenario_em)) {
     
     # 3.modify files 
     update_em(fore_em = fore_em, 
-              start_em = start_em, dat_em=dat_em, ctl_em=ctl_em, new_mod_path_em=new_mod_path_em,
+              start_em = start_em, 
+              dat_em = dat_em, 
+              ctl_em = ctl_em, 
+              new_mod_path_em = new_mod_path_em,
               recdev_early = 1938,
-              m_mult1 = m_mult1, 
+              m_mult1 = m_mult1,
               m_mult2 = m_mult2,
               steep_mult = steep_mult, 
               steep_phase = steep_phase,
@@ -278,6 +283,7 @@ for (scen_em in 1:ncol(scenario_em)) {
               exe = ss3exe, 
               skipfinished = FALSE, 
               show_in_console = FALSE) # switch to FALSE when not testing
+ 
   })
   
   # stop the cluster
