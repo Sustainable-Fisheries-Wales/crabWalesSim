@@ -11,6 +11,14 @@
 # 3.selectivity params (length-at-50% selectivity)
 # 4.asymptotic length (growth param)
 
+# check if required packages are installed
+required <- c("ss3sim", "r4ss", "foreach", "doParallel", "stats", "dplyr", "pak")
+installed <- rownames(installed.packages())
+(not_installed <- required[!required %in% installed])
+install.packages(not_installed[!not_installed %in% c("r4ss", "ss3sim")], dependencies = TRUE)
+if (not_installed %in% "r4ss") {pak::pkg_install("r4ss/r4ss")}
+if (not_installed %in% "ss3sim") {pak::pkg_install("ss3sim/ss3sim")}
+
 
 # load functions to condition base, set om & em scenarios,and update om & em
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
@@ -20,7 +28,7 @@ source("em_scenarios_wales_crab.R")
 source("generate_om_em_id.R")
 source("update_om_wales_crab.R")
 source("update_em_wales_crab.R")
-#pak::pkg_install("ss3sim/ss3sim")
+
 
 # set up the base model
 setwd("..")
