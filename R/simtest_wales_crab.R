@@ -16,8 +16,8 @@ required <- c("ss3sim", "r4ss", "foreach", "doParallel", "stats", "dplyr", "pak"
 installed <- rownames(installed.packages())
 (not_installed <- required[!required %in% installed])
 install.packages(not_installed[!not_installed %in% c("r4ss", "ss3sim")], dependencies = TRUE)
-if (not_installed %in% "r4ss") {pak::pkg_install("r4ss/r4ss")}
-if (not_installed %in% "ss3sim") {pak::pkg_install("ss3sim/ss3sim")}
+pak::pkg_install("r4ss/r4ss")
+pak::pkg_install("ss3sim/ss3sim")
 
 
 # load functions to condition base, set om & em scenarios,and update om & em
@@ -37,7 +37,7 @@ dir.base <- file.path(dir.main, "base_model")
 nyears <- 50 # n of forecasting simulation years
 nboot <- 3 # n of bootstrapped data files
 niter <- nboot
-ss3exe <- file.path(dir.main, "ss3_win.exe")
+ss3exe <- file.path(dir.base, "ss3_win.exe")
 extras_om <- " -nohess" # if not estimating parameters
 extras_em <- " " # if estimating parameters
 
@@ -46,7 +46,7 @@ fore_base <- r4ss::SS_readforecast(file = file.path(dir.base, "forecast.ss"), ve
 start_base <- r4ss::SS_readstarter(file = file.path(dir.base, "starter.ss"),  verbose = FALSE)
 dat_base <- r4ss::SS_readdat(file = file.path(dir.base, "data.ss"), verbose = FALSE)
 ctl_base <- r4ss::SS_readctl(file = file.path(dir.base, "control.ss"), verbose = FALSE, use_datlist = TRUE, datlist = dat_base)
-f_base <- as.data.frame(readr::read_csv(file = "fleet_f_ctl.csv")) 
+f_base <- as.data.frame(readr::read_csv(file = file.path(dir.base, "fleet_f_ctl.csv"))) 
 
 condition_base(dir.base = dir.base, 
                fore_base = fore_base, 
@@ -171,7 +171,7 @@ for (scen_em in 1:ncol(scenario_em)) {
   scenarioID <- scenario_id(scenario_m=scenario_m, scenario_st=scenario_st, scenario_sl=scenario_sl, 
                             scenario_linf=scenario_linf, scenario_ess=scenario_ess, scenario_om=scenario_om)
   stock <- "wales"
-  species <- "lobster"
+  species <- "crab"
   print(scenario_name <- paste0("0D", scenarioID[1], "-E", scenarioID[2], "-F", scenarioID[3], "-R", scenarioID[4], "-X", scenarioID[5],   
                                 "-M", scenarioID[6], "-St", scenarioID[7], "-Sl", scenarioID[8], "-G", scenarioID[9],  
                                 "-", stock, "-", species))

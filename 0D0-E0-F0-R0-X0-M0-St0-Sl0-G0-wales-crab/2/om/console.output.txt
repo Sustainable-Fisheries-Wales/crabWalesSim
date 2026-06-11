@@ -1,0 +1,61 @@
+###
+console output
+2026-06-11 18:13:41.661914
+###
+ 
+ reading from starter.ss
+ reading from data file
+Data read successful 999
+
+ reading forecast file 
+ reading from control file
+End of control file successful! 999
+Begin setting up parameters ...  end of parameter section 
+Evaluating biology calculations once ... done
+Starting optimization of 'ss3_win' in phase 1 of 1 at Thu Jun 11 18:13:36 2026
+ CPUE  0 0 1062.62 -7.578 1.91721 0 -7.12171 36.0441
+ Disc  149.123 -64.3928 17.5452 0 0 0 0 0
+ Length   29852.6 5018.26 351.119 0 0 0 0 0
+ Recr 43.0235  sum_recdev: -80.472
+ InitEQ_Regime 0
+ Parm_Priors 24.322
+ Parm_devs  0 0
+ 0 0
+ SoftBound 0.0057142
+ F_ballpark 0
+Catch 2.79285e+07
+ EQUL_catch 3.16962
+  crash 0
+1 1 -log(L): 2.7965e+07  Spbio: 679.08 365.006 cat 2.79285e+07
+phase= 1 | nvar=  1 | iter=  0 | nll=2.80e+07 | mag=3.14e-14 | par[  1]=dummy_parm
+Optimization completed after 0.61 s with final statistics:
+  nll=27964993.756316 | mag=3.13908e-14 | par[  1]=dummy_parm
+
+ CPUE  0 0 1062.62 -7.578 1.91721 0 -7.12171 36.0441
+ Disc  149.123 -64.3928 17.5452 0 0 0 0 0
+ Length   29852.6 5018.26 351.119 0 0 0 0 0
+ Recr 43.0235  sum_recdev: -80.472
+ InitEQ_Regime 0
+ Parm_Priors 24.322
+ Parm_devs  0 0
+ 0 0
+ SoftBound 0.0057142
+ F_ballpark 0
+Catch 2.79285e+07
+ EQUL_catch 3.16962
+  crash 0
+1 2 -log(L): 2.7965e+07  Spbio: 679.08 365.006 cat 2.79285e+07
+Iterations: 2
+Finished calculating benchmarks
+Finished forecast
+Writing wtatage.ss_new
+mceval counter: 0
+Finished posteriors
+ finished appending to cumreport.sso 
+Finished final writing of report.sso
+Begin writing *.ss_new output files ... Finished writing *.ss_new output files
+
+!!  Run has completed  !! 
+!!  See warning.sso for 8 warnings  and 1 note 
+
+Finished running model 'ss3_win' after 4.5 s.

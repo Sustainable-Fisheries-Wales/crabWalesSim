@@ -1,0 +1,14 @@
+Note 1 Information: Max data length bin: 23.5  < max pop len bins: 24; so will accumulate larger pop len bins
+Warning 1 : Final gradient: 9338.97 is larger than final_conv: 0.0001
+Warning 2 : adjusted MGparm out of base parm bounds. Phase: 6; Inter: 1660; parm#: 22; y: 1990; min: 0; max: 1; base: 0.615732 timevary_val: 1.10425 Catch_Mult:_2_Pot_fisheries_historical
+Warning 3 : adjusted MGparm out of base parm bounds. Phase: 6; Inter: 1660; parm#: 22; y: 1992; min: 0; max: 1; base: 0.615732 timevary_val: 1.02482 Catch_Mult:_2_Pot_fisheries_historical
+Warning 4 : adjusted MGparm out of base parm bounds. Phase: 6; Inter: 1660; parm#: 22; y: 1994; min: 0; max: 1; base: 0.615732 timevary_val: 1.00043 Catch_Mult:_2_Pot_fisheries_historical
+Warning 5 : adjusted MGparm out of base parm bounds. Phase: 6; Inter: 1660; parm#: 22; y: 2001; min: 0; max: 1; base: 0.615732 timevary_val: 1.04991 Catch_Mult:_2_Pot_fisheries_historical
+Warning 6 : adjusted MGparm out of base parm bounds. Phase: 6; Inter: 1660; parm#: 22; y: 2002; min: 0; max: 1; base: 0.615732 timevary_val: 1.27235 Catch_Mult:_2_Pot_fisheries_historical
+Warning 7 : adjusted MGparm out of base parm bounds. Phase: 6; Inter: 1660; parm#: 22; y: 1990; min: 0; max: 1; base: 0.615732 timevary_val: 1.10425 Catch_Mult:_2_Pot_fisheries_historical
+Warning 8 : adjusted MGparm out of base parm bounds. Phase: 6; Inter: 1660; parm#: 22; y: 1992; min: 0; max: 1; base: 0.615732 timevary_val: 1.02482 Catch_Mult:_2_Pot_fisheries_historical
+Warning 9 : adjusted MGparm out of base parm bounds. Phase: 6; Inter: 1660; parm#: 22; y: 1994; min: 0; max: 1; base: 0.615732 timevary_val: 1.00043 Catch_Mult:_2_Pot_fisheries_historical
+Warning 10 : adjusted MGparm out of base parm bounds. Phase: 6; Inter: 1660; parm#: 22; y: 2001; min: 0; max: 1; base: 0.615732 timevary_val: 1.04991 Catch_Mult:_2_Pot_fisheries_historical
+Warning 11 : adjusted MGparm out of base parm bounds. Phase: 6; Inter: 1660; parm#: 22; y: 2002; min: 0; max: 1; base: 0.615732 timevary_val: 1.27235 Catch_Mult:_2_Pot_fisheries_historical
+Note 2 Information:  N parameters that are on or within 1% of min-max bound: 1; check results, variance may be suspect
+ 11 warnings  and 2 notes 

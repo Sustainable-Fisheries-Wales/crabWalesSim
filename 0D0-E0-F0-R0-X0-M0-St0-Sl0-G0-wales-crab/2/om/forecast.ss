@@ -1,12 +1,12 @@
 #C file created using an r4ss function
-#C file write time: 2026-06-11  18:02:55
+#C file write time: 2026-06-11  18:13:35
 #
 1 #_benchmarks
 2 #_MSY
 0.4 #_SPRtarget
 0.4 #_Btarget
 #_Bmark_years: beg_bio, end_bio, beg_selex, end_selex, beg_relF, end_relF,  beg_recr_dist, end_recr_dist, beg_SRparm, end_SRparm (enter actual year, or values of 0 or -integer to be rel. endyr)
-2024 2024 2024 2024 2024 2024 2024 2024 2024 2024
+2074 2074 2074 2074 2074 2074 2074 2074 2074 2074
 1 #_Bmark_relF_Basis
 1 #_Forecast
 5 #_Nforecastyrs
@@ -35,7 +35,7 @@
 0 #_fcast_rec_option
 0.7 #_fcast_rec_val
 0 #_HCR_anchor
-2020 #_FirstYear_for_caps_and_allocations
+2075 #_FirstYear_for_caps_and_allocations
 0 #_stddev_of_log_catch_ratio
 0 #_Do_West_Coast_gfish_rebuilder_output
 1999 #_Ydecl
@@ -51,11 +51,11 @@
 -9999 -1
 3 #_InputBasis
  #_year seas fleet catch_or_F
-   2025    1     1       0.36
-   2026    1     1       0.36
-   2027    1     1       0.36
-   2028    1     1       0.36
-   2029    1     1       0.36
+   2075    1     2       0.36
+   2076    1     2       0.36
+   2077    1     2       0.36
+   2078    1     2       0.36
+   2079    1     2       0.36
 -9999 0 0 0
 #
 999 # verify end of input 
